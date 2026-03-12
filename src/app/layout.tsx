@@ -1,12 +1,13 @@
 import type { Metadata } from 'next'
-import { Geist } from 'next/font/google'
 import './globals.css'
 import MyNavbar from '@/components/navbar/MyNavbar'
 import MyFooter from '@/components/footer/MyFooter'
 import MySpeedDial from '@/components/buttons/MySpeedDial'
 import BottomNavigation from '@/components/navbar/BottomNavigation'
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
 
-const geist = Geist({ subsets: ['latin'] })
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: 'Browse Our Relatives',
@@ -19,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="it">
-      <body className={`${geist.className} pb-20 nav:pb-0`}>
+    <html lang="it" className={cn("font-sans", geist.variable)}>
+      <body className="pb-20 nav:pb-0">
         <header>
           <MyNavbar />
         </header>
