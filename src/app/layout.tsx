@@ -4,10 +4,10 @@ import MyNavbar from '@/components/navbar/MyNavbar'
 import MyFooter from '@/components/footer/MyFooter'
 import MySpeedDial from '@/components/buttons/MySpeedDial'
 import BottomNavigation from '@/components/navbar/BottomNavigation'
-import { Geist } from "next/font/google";
+import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: 'Browse Our Relatives',
@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html
       lang="it"
-      className={cn("font-sans", geist.variable)}
+      className={cn("font-sans", inter.variable)}
       style={{ backgroundColor: '#00484c' }}
     >
       <body
