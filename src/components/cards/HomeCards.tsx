@@ -21,30 +21,21 @@ export default function HomeCards({
   const [isFav, setIsFav] = useState(false)
 
   useEffect(() => {
-    if (Array.isArray(favourites)) {
-      setIsFav(favourites.some(f => f?.id === item?.id))
-    }
+    if (Array.isArray(favourites)) setIsFav(favourites.some(f => f?.id === item?.id))
   }, [item, favourites])
 
   return (
     <>
-      <Details
-        item={item}
-        handleOpen={() => setOpen(!open)}
-        closeModal={() => setOpen(false)}
-        open={open}
-      />
+      <Details item={item} handleOpen={() => setOpen(!open)} closeModal={() => setOpen(false)} open={open} />
 
-      <div
-        className={cn(
-          "w-full rounded-2xl overflow-hidden flex flex-col",
-          "bg-white/5 backdrop-blur-md border border-myP/20",
-          "shadow-[0_8px_32px_rgba(0,72,76,0.5)]",
-          "hover:shadow-[0_8px_40px_rgba(0,175,107,0.15)] hover:border-myP/40",
-          "transition-all duration-300"
-        )}
-      >
-        {/* Top bar */}
+      <div className={cn(
+        'w-full rounded-2xl flex flex-col',
+        'bg-white/5 backdrop-blur-md border border-myP/20',
+        'shadow-[0_8px_32px_rgba(0,72,76,0.5)]',
+        'hover:shadow-[0_8px_40px_rgba(0,175,107,0.15)] hover:border-myP/40',
+        'transition-all duration-300'
+      )}>
+        {/* Top: badge + heart */}
         <div className="flex items-center justify-between px-4 pt-4 pb-1">
           <Badge variant="outline">{item?.tipo || '—'}</Badge>
           <button
@@ -53,13 +44,13 @@ export default function HomeCards({
           >
             {isFav
               ? <GoHeartFill className="w-5 h-5 text-myP" />
-              : <GoHeart className="w-5 h-5 text-txt/50 hover:text-myP" />
+              : <GoHeart className="w-5 h-5 text-txt/40 hover:text-myP transition-colors" />
             }
           </button>
         </div>
 
         {/* Image */}
-        <div className="flex justify-center py-8">
+        <div className="flex justify-center py-7">
           <img
             src={item?.img || 'https://flowbite.com/docs/images/people/profile-picture-5.jpg'}
             alt={item?.nome}
@@ -70,7 +61,7 @@ export default function HomeCards({
         {/* Name */}
         <div className="text-center px-5 pb-6">
           <h5 className="text-xl font-bold text-txt mb-1">{item?.nome}</h5>
-          <span className="text-sm text-myP/70">{item?.tipo}</span>
+          <span className="text-sm text-myP/60">{item?.tipo}</span>
         </div>
 
         {/* Buttons */}
@@ -84,7 +75,7 @@ export default function HomeCards({
           <Button
             onClick={() => change(num)}
             variant="outline"
-            className="flex-1 border-myP/30 text-txt hover:bg-myP/10 hover:border-myP/60 rounded-xl h-10"
+            className="flex-1 border-myP/30 text-txt hover:bg-myP/10 hover:border-myP/50 rounded-xl h-10"
           >
             Vedine un altro
           </Button>

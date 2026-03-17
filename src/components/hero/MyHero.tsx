@@ -4,16 +4,16 @@ import { useRouter } from 'next/navigation'
 import { Flame } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
 import { Button } from '@/components/ui/button'
-import Sections from './Sections'
+import { Skeleton } from '@/components/ui/skeleton'
+import HomeCards from '@/components/cards/HomeCards'
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
 export default function MyHero() {
   const router = useRouter()
   const { token, fetchMe, fetchFavourites, setTokenFromStorage } = useUserStore()
-  const [item1, setItem1] = useState<any>({})
-  const [item2, setItem2] = useState<any>({})
-  const [whatItem, setWhatItem] = useState<string | null>(null)
+  const [item1, setItem1] = useState<any>(null)
+  const [item2, setItem2] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
   const getRand = async (setter: (d: any) => void) => {
@@ -41,26 +41,25 @@ export default function MyHero() {
     }
   }, [token])
 
-  useEffect(() => {
-    if (whatItem === 'item1') getRand(setItem1)
-    if (whatItem === 'item2') getRand(setItem2)
-    setWhatItem(null)
-  }, [whatItem])
+  const refresh = async (which: string) => {
+    if (which === 'item1') await getRand(setItem1)
+    if (which === 'item2') await getRand(setItem2)
+  }
 
   return (
-    <div className="flex flex-col">
-      {/* Hero */}
+    <div className="flex flex-col min-h-[calc(100vh-7rem)]">
+
+      {/* Hero header */}
       <section className="flex flex-col items-center justify-center text-center pt-16 pb-14 px-6">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-txt/40 home-text-shadow mb-3 leading-tight">
-          Benvenuto in{' '}
-          <span className="text-myP text-hover">Browse our relatives</span>
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
+          <span className="text-txt/40 home-text-shadow">Benvenuto in </span>
+          <span className="text-myP text-hover home-text-shadow">Browse our relatives</span>
         </h1>
-        <p className="text-lg text-txt/60 mb-10 max-w-xl home-text-shadow">
+        <p className="text-lg text-txt/60 mb-10 max-w-lg home-text-shadow">
           Scopri tutte le specie del mondo animale.
         </p>
         <Button
           onClick={() => router.push('/curiosone')}
-          size="lg"
           className="bg-myP text-myS font-bold hover:bg-myP/80 rounded-2xl px-8 h-12 text-base gap-2 shadow-[0_4px_24px_rgba(0,175,107,0.35)]"
         >
           <Flame className="h-5 w-5" />
@@ -69,7 +68,21 @@ export default function MyHero() {
       </section>
 
       {/* Cards */}
-      <Sections item1={item1} item2={item2} change={setWhatItem} loading={loading} />
+      <section className="container mx-auto pb-20 px-4 md:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          {loading ? (
+            <>
+              <Skeleton className="h-80 rounded-2xl" />
+              <Skeleton className="h-80 rounded-2xl" />
+            </>
+          ) : (
+            <>
+              <HomeCards item={item1} change={refresh} num="item1" />
+              <HomeCards item={item2} change={refresh} num="item2" />
+            </>
+          )}
+        </div>
+      </section>
     </div>
   )
 }
