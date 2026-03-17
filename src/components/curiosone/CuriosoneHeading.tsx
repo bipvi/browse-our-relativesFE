@@ -1,10 +1,12 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Alert, Button, Spinner } from 'flowbite-react'
+import { RefreshCw, AlertCircle } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
 import { HorizontalCard } from '@/components/cards/HorizontalCard'
 import MicroCard from '@/components/cards/MicroCard'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
@@ -13,21 +15,27 @@ export default function CuriosoneHeading() {
   const { token } = useUserStore()
   const [item, setItem] = useState<any>(undefined)
   const [other, setOther] = useState<any>(undefined)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [isWrong, setIsWrong] = useState(false)
 
   const getRandomSpecie = async (setter: (d: any) => void) => {
     try {
-      const resp = await fetch(`${API}/specie/getRandomly`, { headers: { Authorization: `Bearer ${token}` } })
+      const resp = await fetch(`${API}/specie/getRandomly`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       if (resp.ok) { setter(await resp.json()); setIsWrong(false) }
       else throw new Error()
-    } catch { setIsWrong(true); alert('Errore nel caricamento') }
+    } catch { setIsWrong(true) }
   }
 
   useEffect(() => {
-    getRandomSpecie(setItem)
-    getRandomSpecie(setOther)
-  }, [])
+    if (token) {
+      setIsLoading(true)
+      Promise.all([getRandomSpecie(setItem), getRandomSpecie(setOther)]).finally(() =>
+        setIsLoading(false)
+      )
+    }
+  }, [token])
 
   useEffect(() => {
     if (!token) router.push('/')
@@ -35,64 +43,106 @@ export default function CuriosoneHeading() {
 
   const handleRefresh = async () => {
     setIsLoading(true)
-    await getRandomSpecie(setItem)
-    await getRandomSpecie(setOther)
+    await Promise.all([getRandomSpecie(setItem), getRandomSpecie(setOther)])
     setIsLoading(false)
   }
 
+  const taxonomy = item
+    ? [
+        item.genere,
+        item.genere?.famiglia,
+        item.genere?.famiglia?.ordine,
+        item.genere?.famiglia?.ordine?.classe,
+        item.genere?.famiglia?.ordine?.classe?.phylum,
+        item.genere?.famiglia?.ordine?.classe?.phylum?.regno,
+      ].filter(Boolean)
+    : []
+
+  const otherItems = other
+    ? [
+        other,
+        other.genere,
+        other.genere?.famiglia?.ordine,
+        other.genere?.famiglia?.ordine?.classe?.phylum,
+      ].filter(Boolean)
+    : []
+
   return (
-    <>
-      {isWrong && <Alert color="warning">Sorry, something went wrong please try again.</Alert>}
-
-      <div className="lg:flex lg:items-center lg:justify-evenly my-7 mx-auto px-8 sm:px-14 md:px-4 lg:px-16 w-screen">
-        <div className="min-w-0 flex-1 flex-nowrap">
-          <div className="flex items-center justify-between sm:me-6 lg:me-0">
-            <h2 className="text-2xl/7 font-bold text-start text-txt sm:truncate sm:text-3xl sm:tracking-tight">
-              {item?.nome}
-            </h2>
-            <Button size="lg" className="flex items-center gap-2 text-tx bg-myP popup" onClick={handleRefresh}>
-              Vedi altro
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-5 w-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-              </svg>
-            </Button>
-          </div>
+    <div className="w-full px-4 sm:px-8 lg:px-16 py-8">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8 gap-4">
+        <div className="min-w-0">
+          {isLoading ? (
+            <Skeleton className="h-9 w-64" />
+          ) : (
+            <h2 className="text-3xl font-bold text-txt truncate">{item?.nome}</h2>
+          )}
         </div>
+        <Button
+          onClick={handleRefresh}
+          disabled={isLoading}
+          className="flex-shrink-0 bg-myP text-myS font-semibold hover:bg-myP/80 rounded-xl gap-2 px-5 h-10"
+        >
+          <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+          Vedi altro
+        </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 mx-auto py-3 px-8 sm:px-14 md:px-4 lg:px-16 w-screen gap-11">
-        <div className="lg:col-span-4 col-span-3">
-          {isLoading ? <Spinner className="h-12 w-12" /> : <HorizontalCard it={item} />}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-6 min-w-full gap-4 mt-6">
-            {!isLoading && item && [
-              item.genere,
-              item.genere?.famiglia,
-              item.genere?.famiglia?.ordine,
-              item.genere?.famiglia?.ordine?.classe,
-              item.genere?.famiglia?.ordine?.classe?.phylum,
-              item.genere?.famiglia?.ordine?.classe?.phylum?.regno,
-            ].filter(Boolean).map((subItem: any, i: number) => (
-              <MicroCard key={i} item={subItem} />
-            ))}
-            {isLoading && <Spinner className="h-12 w-12" />}
-          </div>
+      {/* Error */}
+      {isWrong && (
+        <div className="flex items-center gap-2 text-amber-400 bg-amber-400/10 border border-amber-400/20 rounded-xl px-4 py-3 mb-6">
+          <AlertCircle className="h-4 w-4 flex-shrink-0" />
+          <span className="text-sm">Errore nel caricamento. Riprova.</span>
+        </div>
+      )}
+
+      {/* Main grid */}
+      <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-8">
+        {/* Left: main card + taxonomy */}
+        <div className="md:col-span-3 lg:col-span-4 space-y-6">
+          {isLoading ? (
+            <Skeleton className="h-80" />
+          ) : (
+            <HorizontalCard it={item} />
+          )}
+
+          {/* Taxonomy chain */}
+          {!isLoading && taxonomy.length > 0 && (
+            <div>
+              <h3 className="text-xs font-semibold text-txt/50 uppercase tracking-widest mb-3">
+                Gerarchia tassonomica
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4">
+                {taxonomy.map((subItem: any, i: number) => (
+                  <MicroCard key={i} item={subItem} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {isLoading && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton key={i} className="h-48" />
+              ))}
+            </div>
+          )}
         </div>
 
-        <div className="lg:col-span-1 hidden md:contents">
-          <div className="flex flex-col items-center gap-7">
-            <h2 className="self-start text-lg font-semibold text-txt">Altre specie:</h2>
-            {!isLoading && other && [
-              other,
-              other.genere,
-              other.genere?.famiglia?.ordine,
-              other.genere?.famiglia?.ordine?.classe?.phylum,
-            ].filter(Boolean).map((subItem: any, i: number) => (
-              <MicroCard key={i} item={subItem} classe={i > 1 ? 'hideLastCard' : ''} />
-            ))}
-            {isLoading && <Spinner className="h-12 w-12" />}
-          </div>
+        {/* Right sidebar: other species */}
+        <div className="hidden md:flex md:flex-col gap-4 md:col-span-1">
+          <h3 className="text-xs font-semibold text-txt/50 uppercase tracking-widest">
+            Altre specie
+          </h3>
+          {isLoading
+            ? Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-48" />
+              ))
+            : otherItems.map((subItem: any, i: number) => (
+                <MicroCard key={i} item={subItem} classe={i > 1 ? 'hideLastCard' : ''} />
+              ))}
         </div>
       </div>
-    </>
+    </div>
   )
 }

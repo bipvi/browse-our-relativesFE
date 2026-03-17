@@ -20,8 +20,24 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="it" className={cn("font-sans", geist.variable)}>
-      <body className="pb-20 nav:pb-0">
+    <html
+      lang="it"
+      className={cn("font-sans", geist.variable)}
+      style={{ backgroundColor: '#00484c' }}
+    >
+      <body
+        className="pb-20 nav:pb-0"
+        style={{
+          backgroundColor: '#00484c',
+          backgroundImage: [
+            'radial-gradient(ellipse 90% 55% at 10% 0%, rgba(0,175,107,0.28) 0%, transparent 58%)',
+            'radial-gradient(ellipse 75% 65% at 88% 100%, rgba(22,134,156,0.22) 0%, transparent 55%)',
+            'radial-gradient(ellipse 50% 40% at 50% 50%, rgba(0,72,76,0.5) 0%, transparent 80%)',
+          ].join(','),
+          backgroundAttachment: 'fixed',
+          minHeight: '100vh',
+        }}
+      >
         <header>
           <MyNavbar />
         </header>

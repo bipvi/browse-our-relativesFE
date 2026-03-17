@@ -60,8 +60,16 @@
 
 body,
 :root {
+  --background: #00484c;
+  --foreground: #E7F1E4;
+  color: #E7F1E4;
   background-color: #00484c !important;
-  height: 100vh !important;
+  background-image:
+    radial-gradient(ellipse 90% 55% at 10% 0%, rgba(0, 175, 107, 0.28) 0%, transparent 58%),
+    radial-gradient(ellipse 75% 65% at 88% 100%, rgba(22, 134, 156, 0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(0, 72, 76, 0.5) 0%, transparent 80%) !important;
+  background-attachment: fixed !important;
+  min-height: 100vh !important;
   width: 100vw !important;
 }
 
@@ -194,8 +202,8 @@ img.w-10.h-10 {
 
 @layer base {
   :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    --background: #00484c;
+    --foreground: oklch(0.95 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);
@@ -265,9 +273,6 @@ img.w-10.h-10 {
   }
   * {
     @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
   html {
     @apply font-sans;
