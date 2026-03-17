@@ -1,7 +1,7 @@
 const LINKS = [
-  { title: 'Product', items: ['Overview', 'Features', 'Solutions', 'Tutorials'] },
-  { title: 'Company', items: ['About us', 'Careers', 'Press', 'News'] },
-  { title: 'Resource', items: ['Blog', 'Newsletter', 'Events', 'Help center'] },
+  { title: 'Esplora', items: ['Home', 'Curiosone', 'Specie', 'Generi'] },
+  { title: 'Progetto', items: ['Chi siamo', 'Contatti', 'Contribuisci', 'News'] },
+  { title: 'Risorse', items: ['Blog', 'Newsletter', 'FAQ', 'Help center'] },
 ]
 
 const currentYear = new Date().getFullYear()
