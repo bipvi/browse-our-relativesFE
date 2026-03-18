@@ -38,7 +38,7 @@ export default function MyFooter() {
           {/* Brand */}
           <div className="flex flex-col gap-5 max-w-xs">
             <div className="flex items-center gap-3">
-              <Image src="/favicon.svg" width={40} height={40} alt="logo" className="logo-shadow" />
+              <Image src="/logo.svg" width={75} height={40} alt="logo" className="logo-shadow" />
               <span className="text-lg font-bold text-txt tracking-tight">Browse our relatives</span>
             </div>
             <p className="text-sm text-txt/40 leading-relaxed">
