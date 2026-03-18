@@ -70,18 +70,18 @@ function ChildCard({ item, onClick }: { item: any; onClick: () => void }) {
       <div
         className={cn(
           'group rounded-2xl overflow-hidden flex flex-col cursor-pointer',
-          'bg-white/5 backdrop-blur-md border border-white/8',
-          'hover:border-myP/40 hover:shadow-[0_4px_24px_rgba(0,175,107,0.15)]',
+          'bg-white/5 backdrop-blur-md ring-1 ring-transparent',
+          'hover:ring-myP/40 hover:shadow-[0_4px_24px_rgba(0,175,107,0.15)]',
           'transition-all duration-300'
         )}
         onClick={onClick}
       >
         {/* Image */}
-        <div className="relative h-36 shrink-0">
+        <div className="relative h-36 shrink-0 overflow-hidden">
           <img
             src={item?.img || ''}
             alt={item?.nome}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-bg/80 via-bg/20 to-transparent" />
           <div className="absolute top-2 left-2">
@@ -131,8 +131,8 @@ function SelectedCard({ item, onNavigateDown }: { item: any; onNavigateDown?: ()
         'shadow-[0_8px_32px_rgba(0,72,76,0.5)]',
       )}>
         {/* Image */}
-        <div className="relative h-56">
-          <img src={item?.img || ''} alt={item?.nome} className="w-full h-full object-cover" />
+        <div className="relative h-56 overflow-hidden">
+          <img src={item?.img || ''} alt={item?.nome} className="w-full h-full object-cover object-center" />
           <div className="absolute inset-0 bg-gradient-to-t from-bg/90 via-bg/30 to-transparent" />
           <div className="absolute top-3 left-3">
             <span className={cn('text-xs font-semibold px-2.5 py-1 rounded-full border backdrop-blur-md', TIPO_COLOR[tipo] ?? 'bg-white/10 text-white border-white/20')}>

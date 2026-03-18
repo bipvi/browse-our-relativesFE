@@ -68,16 +68,16 @@ function ChildCard({ item, onClick }: { item: any; onClick: () => void }) {
         onClick={onClick}
         className={cn(
           'group rounded-2xl overflow-hidden flex flex-col cursor-pointer',
-          'bg-white/5 backdrop-blur-md border border-white/8',
-          'hover:border-myP/40 hover:shadow-[0_4px_24px_rgba(0,175,107,0.15)]',
+          'bg-white/5 backdrop-blur-md ring-1 ring-transparent',
+          'hover:ring-myP/40 hover:shadow-[0_4px_24px_rgba(0,175,107,0.15)]',
           'transition-all duration-300'
         )}
       >
-        <div className="relative h-36 shrink-0">
+        <div className="relative h-36 shrink-0 overflow-hidden">
           <img
             src={item?.img || ''}
             alt={item?.nome}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-bg/80 via-bg/20 to-transparent" />
           <div className="absolute top-2 left-2">
