@@ -84,7 +84,7 @@ export default function LoginPage() {
         </div>
 
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none select-none">
-          <p className="font-mono text-[11px] text-myP/50 tracking-[0.5em] uppercase">Browse our relatives</p>
+          <p className="font-mono text-[11px] text-myP/50 tracking-[0.5em] uppercase">Browse your relatives</p>
         </div>
       </div>
 

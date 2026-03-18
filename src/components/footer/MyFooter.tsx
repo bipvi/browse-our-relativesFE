@@ -39,7 +39,7 @@ export default function MyFooter() {
           <div className="flex flex-col gap-5 max-w-xs">
             <div className="flex items-center gap-3">
               <Image src="/logo.svg" width={75} height={40} alt="logo" className="logo-shadow" />
-              <span className="text-lg font-bold text-txt tracking-tight">Browse our relatives</span>
+              <span className="text-lg font-bold text-txt tracking-tight">Browse your relatives</span>
             </div>
             <p className="text-sm text-txt/40 leading-relaxed">
               Esplora e scopri tutte le specie del mondo animale, dalla più piccola alla più grande.
@@ -81,7 +81,7 @@ export default function MyFooter() {
         {/* Bottom bar */}
         <div className="mt-12 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-txt/25">
-            &copy; {year} Browse our relatives. Tutti i diritti riservati.
+            &copy; {year} Browse your relatives. Tutti i diritti riservati.
           </p>
           <div className="flex gap-5">
             {['Privacy', 'Termini', 'Cookie'].map(label => (

@@ -53,7 +53,7 @@ export default function MyHero() {
       <section className="flex flex-col items-center justify-center text-center pt-16 pb-14 px-6">
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-4">
           <span className="text-txt/40 home-text-shadow">Benvenuto in </span>
-          <span className="text-myP text-hover home-text-shadow">Browse our relatives</span>
+          <span className="text-myP text-hover home-text-shadow">Browse your relatives</span>
         </h1>
         <p className="text-lg text-txt/60 mb-10 max-w-lg home-text-shadow">
           Scopri tutte le specie del mondo animale.

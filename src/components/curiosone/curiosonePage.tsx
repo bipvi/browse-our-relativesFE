@@ -1,13 +1,14 @@
 'use client'
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { RefreshCw, ChevronRight, AlertCircle, TreePine } from 'lucide-react'
+import { RefreshCw, ChevronRight, AlertCircle, TreePine, Plus } from 'lucide-react'
 import { GoHeart, GoHeartFill } from 'react-icons/go'
 import { useUserStore } from '@/store/userStore'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import Details from '@/components/detail/Details'
+import ModalMod from '@/components/admin/ModalMod'
 import { cn } from '@/lib/utils'
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
@@ -116,18 +117,36 @@ function ChildCard({ item, onClick }: { item: any; onClick: () => void }) {
 }
 
 // ─── Selected item card ───────────────────────────────────────────────────────
+// Map: tipo corrente → tipo figlio da creare
+const CHILD_TYPE_MAP: Record<string, string> = {
+  regno: 'Phylum', phylum: 'Classe', classe: 'Ordine',
+  ordine: 'Famiglia', famiglia: 'Genere', genere: 'Specie',
+}
+
 function SelectedCard({ item, onNavigateDown }: { item: any; onNavigateDown?: () => void }) {
-  const { favourites, addFavourite, removeFavourite } = useUserStore()
+  const { favourites, addFavourite, removeFavourite, ruolo } = useUserStore()
   const isFav = Array.isArray(favourites) && favourites.some(f => f?.id === item?.id)
   const [detailOpen, setDetailOpen] = useState(false)
+  const [createOpen, setCreateOpen] = useState(false)
   const tipo = item?.tipo?.toLowerCase()
+  const childTipo = CHILD_TYPE_MAP[tipo] || ''
 
   return (
     <>
       <Details open={detailOpen} handleOpen={() => setDetailOpen(v => !v)} closeModal={() => setDetailOpen(false)} item={item} />
+      {ruolo !== 'USER' && (
+        <ModalMod
+          open={createOpen}
+          handleOpen={() => setCreateOpen(v => !v)}
+          closeModal={() => setCreateOpen(false)}
+          mode="create"
+          defaultTipo={childTipo}
+          defaultParent={item}
+        />
+      )}
       <div className={cn(
         'rounded-2xl overflow-hidden',
-        'bg-white/5 backdrop-blur-md border border-myP/20',
+        'bg-white/5 backdrop-blur-md ring-1 ring-myP/20',
         'shadow-[0_8px_32px_rgba(0,72,76,0.5)]',
       )}>
         {/* Image */}
@@ -162,6 +181,15 @@ function SelectedCard({ item, onNavigateDown }: { item: any; onNavigateDown?: ()
             >
               Dettaglio completo
             </Button>
+            {ruolo !== 'USER' && childTipo && (
+              <Button
+                onClick={() => setCreateOpen(true)}
+                className="flex items-center gap-1.5 bg-white/5 hover:bg-white/10 text-txt border border-white/10 rounded-xl h-9 text-sm px-3"
+              >
+                <Plus className="h-3.5 w-3.5 text-myP" />
+                Crea {childTipo}
+              </Button>
+            )}
           </div>
         </div>
       </div>

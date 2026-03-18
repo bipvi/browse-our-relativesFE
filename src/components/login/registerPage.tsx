@@ -39,7 +39,7 @@ export default function RegisterPage() {
         {/* Logo */}
         <div className="flex flex-col items-center gap-3 mb-8">
           <Image src="/favicon.svg" alt="Logo" width={56} height={56} className="logo-shadow" />
-          <h1 className="text-2xl font-bold text-txt text-shadow">Browse our relatives</h1>
+          <h1 className="text-2xl font-bold text-txt text-shadow">Browse your relatives</h1>
           <p className="text-sm text-txt/50">Crea il tuo account</p>
         </div>
 

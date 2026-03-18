@@ -20,7 +20,7 @@ export default function MyNavbar() {
             className="logo-shadow transition-transform group-hover:scale-110 hover:rotate-6"
           />
           <span className="text-lg font-bold text-txt tracking-tight group-hover:text-myP transition-colors hidden xs:block">
-            Browse our relatives
+            Browse your relatives
           </span>
         </a>
 
