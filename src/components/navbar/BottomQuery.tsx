@@ -6,6 +6,17 @@ import { useUserStore } from '@/store/userStore'
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 const TIPI = ['regno', 'phylum', 'classe', 'ordine', 'famiglia', 'genere', 'specie']
+
+const TIPO_COLOR: Record<string, string> = {
+  regno:   'bg-purple-500/20 text-purple-300 border-purple-500/30',
+  phylum:  'bg-blue-500/20 text-blue-300 border-blue-500/30',
+  classe:  'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+  ordine:  'bg-teal-500/20 text-teal-300 border-teal-500/30',
+  famiglia:'bg-myP/20 text-myP border-myP/30',
+  genere:  'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+  specie:  'bg-orange-500/20 text-orange-300 border-orange-500/30',
+}
+
 type Results = { nome: any[]; desc: any[]; storia: any[] }
 const emptyResults = (): Results => ({ nome: [], desc: [], storia: [] })
 
@@ -16,11 +27,11 @@ export default function BottomQuery() {
   const wrapRef = useRef<HTMLDivElement>(null)
 
   const [isOpen, setIsOpen] = useState(false)
-  const [showFilters, setShowFilters] = useState(false)
+  const [showFilters, setShowFilters] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Results>(emptyResults())
-  const [selected, setSelected] = useState({ regno: false, phylum: false, classe: false, ordine: false, famiglia: false, genere: false, specie: false })
-  const [selQuery, setSelQuery] = useState({ nome: false, descrizione: false, storia: false })
+  const [selected, setSelected] = useState({ regno: true, phylum: true, classe: true, ordine: true, famiglia: true, genere: true, specie: true })
+  const [selQuery, setSelQuery] = useState({ nome: true, descrizione: true, storia: true })
 
   const hasResults = searchQuery.length > 1
 
@@ -90,7 +101,7 @@ export default function BottomQuery() {
       </button>
 
       {isOpen && (
-        <div className="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 w-[90vw] max-w-sm rounded-2xl bg-bg/95 backdrop-blur-md border border-white/10 shadow-[0_-8px_40px_rgba(0,72,76,0.6)] z-50 overflow-hidden">
+        <div className="absolute bottom-full mb-4 left-1/2 -translate-x-1/2 w-[92vw] max-w-sm rounded-2xl bg-bg/95 backdrop-blur-md border border-white/10 shadow-[0_-8px_40px_rgba(0,72,76,0.6)] z-50 overflow-hidden">
 
           {/* Input */}
           <div className="flex items-center gap-2 px-4 py-3 border-b border-white/5">
@@ -118,31 +129,47 @@ export default function BottomQuery() {
 
           {/* Filters */}
           {showFilters && (
-            <div className="grid grid-cols-2 gap-4 px-4 py-3 border-b border-white/5">
+            <div className="px-4 py-3 border-b border-white/5 space-y-3">
               <div>
-                <p className="text-xs font-semibold text-txt/40 uppercase tracking-widest mb-2">Tipo</p>
-                <div className="space-y-1">
-                  {TIPI.map(tipo => (
-                    <label key={tipo} className="flex items-center justify-between cursor-pointer">
-                      <span className="text-xs text-txt/70 capitalize">{tipo}</span>
-                      <input type="checkbox" checked={(selected as any)[tipo]}
-                        onChange={e => setSelected(s => ({ ...s, [tipo]: e.target.checked }))}
-                        className="w-3.5 h-3.5 accent-myP" />
-                    </label>
-                  ))}
+                <p className="text-[10px] font-bold text-txt/30 uppercase tracking-widest mb-2">Tipo</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {TIPI.map(tipo => {
+                    const active = (selected as any)[tipo]
+                    return (
+                      <button
+                        key={tipo}
+                        onClick={() => setSelected(s => ({ ...s, [tipo]: !active }))}
+                        className={`text-xs font-semibold px-2.5 py-1 rounded-full border capitalize transition-all ${
+                          active
+                            ? TIPO_COLOR[tipo]
+                            : 'bg-transparent text-txt/25 border-white/10 hover:border-white/20 hover:text-txt/40'
+                        }`}
+                      >
+                        {tipo}
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
               <div>
-                <p className="text-xs font-semibold text-txt/40 uppercase tracking-widest mb-2">Cerca in</p>
-                <div className="space-y-1">
-                  {(['nome', 'descrizione', 'storia'] as const).map(campo => (
-                    <label key={campo} className="flex items-center justify-between cursor-pointer">
-                      <span className="text-xs text-txt/70 capitalize">{campo}</span>
-                      <input type="checkbox" checked={(selQuery as any)[campo]}
-                        onChange={e => setSelQuery(s => ({ ...s, [campo]: e.target.checked }))}
-                        className="w-3.5 h-3.5 accent-myP" />
-                    </label>
-                  ))}
+                <p className="text-[10px] font-bold text-txt/30 uppercase tracking-widest mb-2">Cerca in</p>
+                <div className="flex gap-1.5">
+                  {(['nome', 'descrizione', 'storia'] as const).map(campo => {
+                    const active = (selQuery as any)[campo]
+                    return (
+                      <button
+                        key={campo}
+                        onClick={() => setSelQuery(s => ({ ...s, [campo]: !active }))}
+                        className={`text-xs font-semibold px-3 py-1 rounded-full border capitalize transition-all ${
+                          active
+                            ? 'bg-myP/20 text-myP border-myP/30'
+                            : 'bg-transparent text-txt/25 border-white/10 hover:border-white/20 hover:text-txt/40'
+                        }`}
+                      >
+                        {campo}
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
             </div>
