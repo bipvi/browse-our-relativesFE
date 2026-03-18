@@ -28,61 +28,57 @@ function FavCard({ item }: { item: any }) {
     <>
       <Details open={detailOpen} handleOpen={() => setDetailOpen(v => !v)} closeModal={() => setDetailOpen(false)} item={item} />
       <div className={cn(
-        'group rounded-2xl overflow-hidden flex flex-col',
-        'bg-white/5 backdrop-blur-md border border-white/8',
-        'hover:border-myP/40 hover:shadow-[0_4px_24px_rgba(0,175,107,0.15)]',
+        'group relative rounded-2xl overflow-hidden cursor-pointer',
+        'ring-1 ring-transparent hover:ring-myP/40',
+        'hover:shadow-[0_8px_32px_rgba(0,175,107,0.2)]',
         'transition-all duration-300'
       )}>
-        {/* Image */}
-        <div
-          className="relative h-40 shrink-0 cursor-pointer"
-          onClick={() => router.push(`/${item.id}`)}
-        >
+        {/* Full image */}
+        <div className="relative h-56" onClick={() => router.push(`/${item.id}`)}>
           <img
             src={item?.img || ''}
             alt={item?.nome}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-bg/80 via-bg/20 to-transparent" />
-          <div className="absolute top-2 left-2">
-            <span className={cn('text-xs font-semibold px-2 py-0.5 rounded-full border backdrop-blur-sm', TIPO_COLOR[tipo] ?? 'bg-white/10 text-white border-white/20')}>
+          {/* strong gradient so text is always readable */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10" />
+
+          {/* Tipo badge top-left */}
+          <div className="absolute top-2.5 left-2.5">
+            <span className={cn('text-[10px] font-bold px-2 py-0.5 rounded-full border backdrop-blur-sm', TIPO_COLOR[tipo] ?? 'bg-white/10 text-white border-white/20')}>
               {item?.tipo}
             </span>
           </div>
+
+          {/* Remove heart top-right */}
           <button
             onClick={e => { e.stopPropagation(); removeFavourite(item.id) }}
             title="Rimuovi dai preferiti"
-            className="absolute top-2 right-2 p-1.5 rounded-full bg-black/40 backdrop-blur-sm hover:bg-red-500/40 text-myP hover:text-red-300 transition-all"
+            className="absolute top-2 right-2 p-1.5 rounded-full bg-black/40 backdrop-blur-sm hover:bg-red-500/50 text-myP hover:text-red-300 transition-all"
           >
             <GoHeartFill className="w-3.5 h-3.5" />
           </button>
-        </div>
 
-        {/* Content */}
-        <div className="px-3 py-3 flex flex-col gap-2 flex-1">
-          <h3
-            className="text-sm font-bold text-txt leading-tight line-clamp-1 cursor-pointer hover:text-myP transition-colors"
-            onClick={() => router.push(`/${item.id}`)}
-          >
-            {item?.nome}
-          </h3>
-          <p className="text-xs text-txt/45 line-clamp-2 leading-relaxed flex-1">
-            {item?.descrizione || item?.storia || ''}
-          </p>
-          <div className="flex items-center gap-2 mt-1">
-            <button
-              onClick={() => setDetailOpen(true)}
-              className="flex-1 text-xs text-myP/70 hover:text-myP transition-colors text-left"
-            >
-              Dettagli →
-            </button>
-            <button
-              onClick={() => removeFavourite(item.id)}
-              className="flex items-center gap-1 text-xs text-txt/30 hover:text-red-400 transition-colors"
-            >
-              <Trash2 className="h-3 w-3" />
-              Rimuovi
-            </button>
+          {/* Name + actions overlaid at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 px-3 pb-3">
+            <h3 className="text-sm font-bold text-white leading-tight line-clamp-1 mb-2">
+              {item?.nome}
+            </h3>
+            <div className="flex items-center justify-between">
+              <button
+                onClick={e => { e.stopPropagation(); setDetailOpen(true) }}
+                className="text-xs text-myP/80 hover:text-myP transition-colors font-medium"
+              >
+                Dettagli →
+              </button>
+              <button
+                onClick={e => { e.stopPropagation(); removeFavourite(item.id) }}
+                className="flex items-center gap-1 text-xs text-white/30 hover:text-red-400 transition-colors"
+              >
+                <Trash2 className="h-3 w-3" />
+                Rimuovi
+              </button>
+            </div>
           </div>
         </div>
       </div>
