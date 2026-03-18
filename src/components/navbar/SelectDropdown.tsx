@@ -180,7 +180,7 @@ export default function SelectDropdown() {
 
           {/* Results */}
           {hasResults && (
-            <div className="grid grid-cols-3 divide-x divide-white/5 max-h-80 overflow-y-auto">
+            <div className="grid grid-cols-3 divide-x divide-white/5 max-h-80 overflow-y-auto scroll-styled">
               {[
                 { label: 'Nome', items: searchResults.nome },
                 { label: 'Descrizione', items: searchResults.desc },

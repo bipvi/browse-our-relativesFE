@@ -188,7 +188,7 @@ export default function BottomQuery() {
 
           {/* Results */}
           {hasResults && (
-            <div className="max-h-80 overflow-y-auto">
+            <div className="max-h-80 overflow-y-auto scroll-styled">
               {[
                 { label: 'Nome', items: searchResults.nome },
                 { label: 'Descrizione', items: searchResults.desc },

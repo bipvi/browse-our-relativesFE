@@ -91,7 +91,7 @@ export default function ModalMod({ open, handleOpen, closeModal, itemPassed = nu
           </div>
 
           {/* Body */}
-          <div className="overflow-y-auto flex-1 px-6 py-5">
+          <div className="overflow-y-auto flex-1 px-6 py-5 scroll-styled">
             <form onSubmit={handleSubmit} className="space-y-4">
 
               {/* Tipo + Item selectors */}

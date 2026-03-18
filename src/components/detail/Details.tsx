@@ -160,7 +160,7 @@ export default function Details({ open, handleOpen, closeModal, item }: DetailsP
               </div>
 
               {/* Scrollable body */}
-              <div className="overflow-y-auto flex-1 px-6 py-5 space-y-6">
+              <div className="overflow-y-auto flex-1 px-6 py-5 space-y-6 scroll-styled">
 
                 {/* Mobile: image */}
                 <div className="md:hidden relative h-48 rounded-2xl overflow-hidden">

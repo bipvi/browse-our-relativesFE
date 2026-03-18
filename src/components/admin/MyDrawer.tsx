@@ -22,7 +22,7 @@ export default function MyDrawer({ open, closeDrawer }: { open: boolean; closeDr
           </div>
 
           {/* Scrollable form */}
-          <div className="overflow-y-auto flex-1 pb-8">
+          <div className="overflow-y-auto flex-1 pb-8 scroll-styled">
             <FormNew closeDrawer={closeDrawer} />
           </div>
         </Dialog.Content>
