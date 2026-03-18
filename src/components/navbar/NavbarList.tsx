@@ -1,6 +1,6 @@
 'use client'
 import { usePathname, useRouter } from 'next/navigation'
-import { Flame, Phone } from 'lucide-react'
+import { Flame, Heart } from 'lucide-react'
 import AvatarDropdown from './AvatarDropdown'
 import SelectDropdown from './SelectDropdown'
 import { cn } from '@/lib/utils'
@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 const links = [
   { label: 'Home', href: '/' },
   { label: 'Curiosone', href: '/curiosone', icon: <Flame className="h-3.5 w-3.5 text-myP" /> },
-  { label: 'Contact', href: '/contact', icon: <Phone className="h-3.5 w-3.5" /> },
+  { label: 'Preferiti', href: '/preferiti', icon: <Heart className="h-3.5 w-3.5" /> },
 ]
 
 export default function NavbarList({

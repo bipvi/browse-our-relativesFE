@@ -1,6 +1,6 @@
 'use client'
 import { usePathname, useRouter } from 'next/navigation'
-import { Home, Globe, Phone } from 'lucide-react'
+import { Home, Globe, Heart } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import AvatarDropdown from './AvatarDropdown'
 import BottomQuery from './BottomQuery'
@@ -41,12 +41,16 @@ export default function BottomNavigation() {
           <BottomQuery />
         </div>
 
-        {/* Contact */}
+        {/* Preferiti */}
         <button
-          title="Contact"
-          className="flex flex-col items-center justify-center w-12 h-12 rounded-xl text-txt/50 hover:text-txt hover:bg-white/5 transition-all"
+          title="Preferiti"
+          onClick={() => router.push('/preferiti')}
+          className={cn(
+            'flex flex-col items-center justify-center w-12 h-12 rounded-xl transition-all',
+            pathname === '/preferiti' ? 'bg-myP/20 text-myP' : 'text-txt/50 hover:text-txt hover:bg-white/5'
+          )}
         >
-          <Phone className="h-5 w-5" />
+          <Heart className="h-5 w-5" />
         </button>
 
         {/* Divider */}
