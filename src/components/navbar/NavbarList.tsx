@@ -1,42 +1,81 @@
 'use client'
-import { Badge, Navbar } from 'flowbite-react'
-import { AiFillFire } from 'react-icons/ai'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { Flame, Phone } from 'lucide-react'
 import AvatarDropdown from './AvatarDropdown'
 import SelectDropdown from './SelectDropdown'
+import { cn } from '@/lib/utils'
 
-export default function NavbarList({ classe }: { classe?: string }) {
+const links = [
+  { label: 'Home', href: '/' },
+  { label: 'Curiosone', href: '/curiosone', icon: <Flame className="h-3.5 w-3.5 text-myP" /> },
+  { label: 'Contact', href: '/contact', icon: <Phone className="h-3.5 w-3.5" /> },
+]
+
+export default function NavbarList({
+  mobile = false,
+  onClose,
+}: {
+  mobile?: boolean
+  onClose?: () => void
+}) {
+  const pathname = usePathname()
   const router = useRouter()
-  const [isHovered, setIsHovered] = useState(false)
+
+  const handleNav = (href: string) => {
+    router.push(href)
+    onClose?.()
+  }
+
+  if (mobile) {
+    return (
+      <>
+        {links.map(link => (
+          <button
+            key={link.href}
+            onClick={() => handleNav(link.href)}
+            className={cn(
+              'flex items-center gap-2 w-full px-4 py-3 rounded-xl text-sm font-medium transition-colors text-left',
+              pathname === link.href
+                ? 'bg-myP/20 text-myP'
+                : 'text-txt/70 hover:text-txt hover:bg-white/5'
+            )}
+          >
+            {link.label}
+            {link.icon}
+          </button>
+        ))}
+        <div className="px-4 py-3 border-t border-white/5 mt-1">
+          <AvatarDropdown />
+        </div>
+      </>
+    )
+  }
 
   return (
-    <>
-      <Navbar.Link className={`${classe} home-text-shadow text-myP border-none hover:text-ac hover:bg-none`} active>
-        <p onClick={() => router.push('/')} className="cursor-pointer">Home</p>
-      </Navbar.Link>
-      <Navbar.Link className="home-text-shadow text-txt border-none hover:text-ac">
-        <SelectDropdown />
-      </Navbar.Link>
-      <Navbar.Link
-        className="home-text-shadow text-txt border-none hover:text-ac"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <p onClick={() => router.push('/curiosone')} className="static cursor-pointer">
-          Curiosone
-          <Badge
-            className={`${isHovered ? 'text-ac shadow-gray-700' : 'text-txt'} hidden bg-myP md:inline absolute z-10 firebadge shadow-md`}
-            size="xs" color="gray" icon={AiFillFire}
-          />
-        </p>
-      </Navbar.Link>
-      <Navbar.Link className="home-text-shadow text-txt border-none hover:text-ac">
-        Contact
-      </Navbar.Link>
-      <Navbar.Link className="logo-shadow border-none">
+    <div className="flex items-center gap-1">
+      {links.map(link => (
+        <button
+          key={link.href}
+          onClick={() => router.push(link.href)}
+          className={cn(
+            'flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-colors',
+            pathname === link.href
+              ? 'bg-myP/15 text-myP'
+              : 'text-txt/60 hover:text-txt hover:bg-white/5'
+          )}
+        >
+          {link.label}
+          {link.icon}
+        </button>
+      ))}
+
+      <div className="w-px h-5 bg-white/10 mx-2" />
+
+      <SelectDropdown />
+
+      <div className="ml-1">
         <AvatarDropdown />
-      </Navbar.Link>
-    </>
+      </div>
+    </div>
   )
 }
