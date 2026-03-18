@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Browse Your Relatives — Frontend
 
-## Getting Started
+Applicazione web per esplorare la tassonomia del regno animale in modo interattivo e visivo. Costruita con **Next.js 14**, **Tailwind CSS** e **shadcn/ui**.
 
-First, run the development server:
+---
+
+## Repository collegati
+
+| Ruolo | Repository |
+|-------|-----------|
+| **Frontend** (questo repo) | `git@github.com:bipvi/browse-our-relativesFE.git` |
+| **Backend** | `git@github.com:bipvi/Browse-our-Parents.git` |
+
+---
+
+## Stack tecnologico
+
+- **Framework**: Next.js 14 (App Router)
+- **Stile**: Tailwind CSS v3 + glassmorphism design
+- **Componenti UI**: shadcn/ui, Radix UI
+- **Icone**: Lucide React, React Icons
+- **State management**: Zustand
+- **Linguaggio**: TypeScript
+
+---
+
+## Funzionalità principali
+
+- **Curiosone** — navigazione gerarchica della tassonomia (regno → phylum → classe → ordine → famiglia → genere → specie)
+- **Esplora** — pagina di dettaglio per ogni elemento tassonomico
+- **Preferiti** — salvataggio degli elementi preferiti
+- **Commenti** — sistema di commenti per ogni elemento
+- **Autenticazione** — login e registrazione utente
+- **Admin** — creazione e modifica di elementi tassonomici a qualsiasi livello
+
+---
+
+## Avvio in sviluppo
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Apri [http://localhost:3000](http://localhost:3000) nel browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Variabili d'ambiente
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Crea un file `.env.local` nella root:
 
-## Learn More
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8080
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Struttura del progetto
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── app/                  # Route Next.js (App Router)
+├── components/
+│   ├── admin/            # Modali creazione/modifica elementi
+│   ├── curiosone/        # Navigatore tassonomico
+│   ├── detail/           # Modale di dettaglio + commenti
+│   ├── esplora/          # Pagina esplora
+│   ├── footer/
+│   ├── hero/
+│   ├── login/
+│   ├── navbar/
+│   └── preferiti/
+├── store/                # Zustand store (auth, preferiti)
+└── lib/                  # Utility
+```
