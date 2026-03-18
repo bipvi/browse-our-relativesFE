@@ -78,18 +78,29 @@ export default function BottomQuery() {
 
   const navigate = (id: string) => { setIsOpen(false); router.push(`/${id}`) }
 
-  const ResultItem = ({ item }: { item: any }) => (
-    <div
-      onClick={() => navigate(item.id)}
-      className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl cursor-pointer hover:bg-white/5 transition-colors"
-    >
-      <div className="flex flex-col items-start min-w-0">
-        <span className="text-sm text-txt truncate">{item.nome}</span>
-        <span className="text-xs text-txt/40">{item.tipo}</span>
+  const ResultItem = ({ item }: { item: any }) => {
+    const t = item?.tipo?.toLowerCase()
+    return (
+      <div
+        onClick={() => navigate(item.id)}
+        className="flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer hover:bg-white/6 border border-transparent hover:border-myP/20 transition-all group"
+      >
+        <div className="relative w-11 h-11 rounded-xl overflow-hidden shrink-0">
+          <img src={item.img} alt={item.nome} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <span className="block text-sm font-semibold text-txt group-hover:text-myP transition-colors truncate leading-tight">
+            {item.nome}
+          </span>
+          <span className={`inline-block text-[10px] font-semibold px-1.5 py-0.5 rounded-full border mt-0.5 ${TIPO_COLOR[t] ?? 'text-txt/40 border-white/10'}`}>
+            {item.tipo}
+          </span>
+        </div>
+        <span className="text-txt/20 group-hover:text-myP/50 transition-colors text-xs shrink-0">→</span>
       </div>
-      <img src={item.img} alt={item.nome} className="w-9 h-9 rounded-full object-cover ring-1 ring-myP/30 shrink-0" />
-    </div>
-  )
+    )
+  }
 
   return (
     <div ref={wrapRef} className="relative">
@@ -177,17 +188,25 @@ export default function BottomQuery() {
 
           {/* Results */}
           {hasResults && (
-            <div className="max-h-72 overflow-y-auto divide-y divide-white/5">
+            <div className="max-h-80 overflow-y-auto">
               {[
                 { label: 'Nome', items: searchResults.nome },
                 { label: 'Descrizione', items: searchResults.desc },
                 { label: 'Storia', items: searchResults.storia },
               ].map(({ label, items }) => items.length > 0 && (
-                <div key={label} className="p-2">
-                  <p className="text-xs font-semibold text-txt/40 uppercase tracking-widest px-1 py-1.5">{label}</p>
-                  {items.map((item, i) => <ResultItem key={i} item={item} />)}
+                <div key={label} className="px-2 py-2">
+                  <div className="flex items-center gap-2 px-2 pb-1.5">
+                    <span className="text-[10px] font-bold text-txt/30 uppercase tracking-widest">{label}</span>
+                    <span className="text-[10px] font-bold text-myP/50 bg-myP/10 px-1.5 py-0.5 rounded-full">{items.length}</span>
+                  </div>
+                  <div className="space-y-0.5">
+                    {items.map((item, i) => <ResultItem key={i} item={item} />)}
+                  </div>
                 </div>
               ))}
+              {searchResults.nome.length === 0 && searchResults.desc.length === 0 && searchResults.storia.length === 0 && (
+                <p className="px-4 py-5 text-sm text-txt/30 text-center">Nessun risultato trovato</p>
+              )}
             </div>
           )}
 
