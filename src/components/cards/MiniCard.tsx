@@ -1,5 +1,5 @@
 'use client'
-import { Button } from 'flowbite-react'
+import { Button } from '@/components/ui/button'
 import { HiOutlinePencil } from 'react-icons/hi2'
 
 export default function MiniCard({ classe }: { classe?: string }) {
@@ -13,7 +13,7 @@ export default function MiniCard({ classe }: { classe?: string }) {
         <p className="font-normal text-txt">Because it&apos;s about motivating the doers. <code>...</code></p>
       </div>
       <div className="flex items-center justify-between p-4">
-        <Button variant="outlined" size="xs" className="flex items-center gap-2 text-bg">
+        <Button variant="outline" size="sm" className="flex items-center gap-2 text-bg">
           Read More
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="h-5 w-5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
