@@ -1,67 +1,133 @@
-// components/login/LoginPage.tsx
-"use client"
+'use client'
 import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { Eye, EyeOff, LogIn } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
-import ButtonMyP from '@/components/buttons/ButtonMyP'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 export default function LoginPage() {
   const router = useRouter()
   const { login } = useUserStore()
   const [me, setMe] = useState({ username: '', password: '' })
+  const [showPwd, setShowPwd] = useState(false)
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!me.username || !me.password) return
+    setLoading(true)
+    setError('')
     try {
       await login(me.username, me.password)
       router.push('/')
     } catch {
-      setError('Credenziali non valide')
+      setError('Credenziali non valide. Riprova.')
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
-    <div className="flex min-h-full flex-1 flex-col justify-center px-2 py-4 sm:px-10 lg:py-16">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm flex items-center mt-16 justify-center flex-wrap">
-        <Image src="/favicon.svg" alt="Logo" width={48} height={48} className="inline-block logo-shadow" />
-        <h2 className="pl-5 text-center text-2xl/9 font-bold tracking-tight text-txt inline text-shadow">
-          Login in to your account
-        </h2>
-      </div>
+    <div className="flex min-h-[calc(100vh-7rem)] items-center justify-center px-4 py-12">
+      <div className="w-full max-w-sm">
 
-      <div className="mt-6 sm:mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        {error && <p className="text-red-400 text-center mb-4">{error}</p>}
-        <form className="space-y-6 mx-6 sm:mx-2" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="email" className="text-md/6 font-medium text-txt">Username</label>
-            <input
-              onChange={(e) => setMe({ ...me, username: e.target.value })}
-              value={me.username}
-              id="email" type="email" required autoComplete="email"
-              className="mt-2 block w-full shadow-xxs rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-myP sm:text-sm/6"
-            />
-          </div>
-          <div>
-            <div className="flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm/6 font-medium text-txt">Password</label>
-              <a href="#" className="text-sm font-semibold text-myP hover:text-ac">Forgot password?</a>
+        {/* Logo */}
+        <div className="flex flex-col items-center gap-3 mb-8">
+          <Image src="/favicon.svg" alt="Logo" width={56} height={56} className="logo-shadow" />
+          <h1 className="text-2xl font-bold text-txt text-shadow">Browse our relatives</h1>
+          <p className="text-sm text-txt/50">Accedi al tuo account</p>
+        </div>
+
+        {/* Card */}
+        <div className={cn(
+          'rounded-2xl p-8',
+          'bg-white/5 backdrop-blur-md border border-myP/20',
+          'shadow-[0_8px_32px_rgba(0,72,76,0.5)]'
+        )}>
+          {error && (
+            <div className="mb-5 rounded-xl bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-400">
+              {error}
             </div>
-            <input
-              id="password" type="password" required autoComplete="current-password"
-              onChange={(e) => setMe({ ...me, password: e.target.value })}
-              value={me.password}
-              className="mt-2 mb-10 block w-full rounded-md shadow-xxs border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-myP sm:text-sm/6"
-            />
-          </div>
-          <ButtonMyP txt="Login" classe="flex w-full justify-center rounded-md" onClick={handleSubmit} />
-        </form>
-        <p className="mt-10 text-center text-sm/6 text-gray-300">
-          Not a member?{' '}
-          <span onClick={() => router.push('/register')} className="cursor-pointer font-semibold text-myP hover:text-ac">
-            Sign in
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Username */}
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium text-txt/80">Username</label>
+              <input
+                type="text"
+                required
+                value={me.username}
+                onChange={e => setMe({ ...me, username: e.target.value })}
+                placeholder="Il tuo username"
+                className={cn(
+                  'w-full rounded-xl px-4 py-2.5 text-sm',
+                  'bg-white/5 border border-myP/20 text-txt placeholder:text-txt/30',
+                  'focus:outline-none focus:border-myP/60 focus:ring-1 focus:ring-myP/30',
+                  'transition-colors'
+                )}
+              />
+            </div>
+
+            {/* Password */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-txt/80">Password</label>
+                <span className="text-xs text-myP hover:text-myP/70 cursor-pointer transition-colors">
+                  Password dimenticata?
+                </span>
+              </div>
+              <div className="relative">
+                <input
+                  type={showPwd ? 'text' : 'password'}
+                  required
+                  value={me.password}
+                  onChange={e => setMe({ ...me, password: e.target.value })}
+                  placeholder="La tua password"
+                  className={cn(
+                    'w-full rounded-xl px-4 py-2.5 pr-11 text-sm',
+                    'bg-white/5 border border-myP/20 text-txt placeholder:text-txt/30',
+                    'focus:outline-none focus:border-myP/60 focus:ring-1 focus:ring-myP/30',
+                    'transition-colors'
+                  )}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPwd(v => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-txt/40 hover:text-txt/70 transition-colors"
+                >
+                  {showPwd ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Submit */}
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full mt-2 bg-myP text-myS font-bold hover:bg-myP/80 rounded-xl h-11 gap-2 shadow-[0_4px_16px_rgba(0,175,107,0.3)]"
+            >
+              {loading ? (
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-myS border-t-transparent" />
+              ) : (
+                <LogIn className="h-4 w-4" />
+              )}
+              {loading ? 'Accesso...' : 'Accedi'}
+            </Button>
+          </form>
+        </div>
+
+        {/* Footer link */}
+        <p className="mt-6 text-center text-sm text-txt/50">
+          Non hai un account?{' '}
+          <span
+            onClick={() => router.push('/register')}
+            className="cursor-pointer font-semibold text-myP hover:text-myP/70 transition-colors"
+          >
+            Registrati
           </span>
         </p>
       </div>

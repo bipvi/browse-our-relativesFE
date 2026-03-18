@@ -1,7 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @import "flowbite";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -12,11 +8,6 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-}
-
-@font-face {
-  font-family: "Bauhaus";
-  src: url("/src/assets/font/BauhausStd-Bold.woff2");
 }
 
 .title {
@@ -282,11 +273,5 @@ img.w-10.h-10 {
   }
   .theme {
     --font-sans: var(--font-sans);
-  }
-  * {
-    @apply border-border outline-ring/50;
-  }
-  html {
-    @apply font-sans;
   }
 }
