@@ -35,7 +35,26 @@
   margin: 0;
   padding: 0;
   text-align: center;
-  scrollbar-width: none !important;
+}
+
+/* ── Scrollbar globale tematizzata ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 175, 107, 0.2) transparent;
+}
+*::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 175, 107, 0.25);
+  border-radius: 9999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 175, 107, 0.5);
 }
 
 .swiper {
