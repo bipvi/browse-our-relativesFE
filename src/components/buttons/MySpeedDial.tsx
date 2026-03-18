@@ -1,50 +1,73 @@
 'use client'
 import { useState } from 'react'
-import { FiUserPlus, FiUserX } from 'react-icons/fi'
-import { BsDatabaseFillAdd } from 'react-icons/bs'
+import { Plus, X, PlusCircle, Pencil } from 'lucide-react'
 import MyDrawer from '@/components/admin/MyDrawer'
 import ModalMod from '@/components/admin/ModalMod'
-import Icon from './Icon'
 import { useUserStore } from '@/store/userStore'
+import { cn } from '@/lib/utils'
 
 export default function MySpeedDial() {
-  const [open, setOpen] = useState(false)
+  const [expanded, setExpanded] = useState(false)
+  const [drawerOpen, setDrawerOpen] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const { ruolo } = useUserStore()
 
+  if (ruolo === 'USER') return null
+
+  const actions = [
+    {
+      label: 'Nuovo elemento',
+      icon: <PlusCircle className="h-4 w-4" />,
+      onClick: () => { setDrawerOpen(true); setExpanded(false) },
+    },
+    {
+      label: 'Modifica elemento',
+      icon: <Pencil className="h-4 w-4" />,
+      onClick: () => { setModalOpen(true); setExpanded(false) },
+    },
+  ]
+
   return (
     <>
-      <MyDrawer open={open} closeDrawer={() => setOpen(false)} />
+      <MyDrawer open={drawerOpen} closeDrawer={() => setDrawerOpen(false)} />
       <ModalMod open={modalOpen} handleOpen={() => setModalOpen(!modalOpen)} closeModal={() => setModalOpen(false)} />
 
-      <div className="fixed bottom-24 nav:bottom-5 z-40 logo-shadow right-6">
-        <div className="relative group flex flex-col items-center gap-2">
-          {/* Actions — visible on hover */}
-          <div className="flex flex-col-reverse items-center gap-2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+      <div className="fixed bottom-24 nav:bottom-6 right-5 z-40 flex flex-col items-end gap-2">
+        {/* Action buttons */}
+        {actions.map((action, i) => (
+          <div
+            key={i}
+            className={cn(
+              'flex items-center gap-2 transition-all duration-200',
+              expanded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+            )}
+            style={{ transitionDelay: expanded ? `${i * 50}ms` : '0ms' }}
+          >
+            <span className="text-xs font-semibold text-txt/70 bg-bg/90 backdrop-blur-sm border border-white/10 px-2.5 py-1 rounded-full shadow-md whitespace-nowrap">
+              {action.label}
+            </span>
             <button
-              onClick={() => setOpen(true)}
-              className="bg-bg border border-txt rounded-full p-2 shadow-md hover:scale-110 transition-transform"
-              title="Aggiungi elemento"
+              onClick={action.onClick}
+              className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 text-txt hover:bg-myP hover:text-myS hover:border-myP transition-all shadow-md flex items-center justify-center"
             >
-              <BsDatabaseFillAdd className="h-5 w-5 nav:h-6 nav:w-6 text-txt" />
-            </button>
-            <button
-              onClick={() => setModalOpen(true)}
-              className="bg-bg border border-txt rounded-full p-2 shadow-md hover:scale-110 transition-transform"
-              title="Modifica elemento"
-            >
-              <Icon toggleModal={() => setModalOpen(true)} />
+              {action.icon}
             </button>
           </div>
+        ))}
 
-          {/* Main button */}
-          {ruolo !== 'USER' && (
-            <button className="nav:size-16 size-12 rounded-full bg-bg border border-txt flex items-center justify-center shadow-lg hover:scale-105 transition-transform">
-              <FiUserX className="h-5 w-5 nav:h-8 nav:w-8 hidden group-hover:block" />
-              <FiUserPlus className="block h-5 w-5 nav:h-8 nav:w-8 group-hover:hidden" />
-            </button>
+        {/* Main FAB */}
+        <button
+          onClick={() => setExpanded(v => !v)}
+          className={cn(
+            'w-13 h-13 rounded-full flex items-center justify-center shadow-[0_8px_24px_rgba(0,0,0,0.4)] transition-all duration-300',
+            expanded
+              ? 'bg-white/10 border border-white/20 text-txt rotate-45'
+              : 'bg-myP border border-myP text-myS hover:bg-myP/80'
           )}
-        </div>
+          style={{ width: '52px', height: '52px' }}
+        >
+          {expanded ? <X className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+        </button>
       </div>
     </>
   )
