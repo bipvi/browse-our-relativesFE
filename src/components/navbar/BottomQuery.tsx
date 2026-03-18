@@ -4,7 +4,7 @@ import { Search, X, SlidersHorizontal } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useUserStore } from '@/store/userStore'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 const TIPI = ['regno', 'phylum', 'classe', 'ordine', 'famiglia', 'genere', 'specie']
 type Results = { nome: any[]; desc: any[]; storia: any[] }
 const emptyResults = (): Results => ({ nome: [], desc: [], storia: [] })

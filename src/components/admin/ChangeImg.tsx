@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Modal } from 'flowbite-react'
 import { useUserStore } from '@/store/userStore'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
 export default function ChangeImg({ open, close, handler }: { open: boolean; close: () => void; handler: () => void }) {
   const { token, fetchMe } = useUserStore()

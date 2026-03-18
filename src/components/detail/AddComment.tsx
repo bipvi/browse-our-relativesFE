@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Send } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
 export default function AddComment({ itemId }: { itemId: string }) {
   const { token, id } = useUserStore()

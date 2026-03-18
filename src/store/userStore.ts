@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { UserStore } from '@/types'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
 const initialState = {
   id: '',
