@@ -1,11 +1,13 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Dialog } from 'radix-ui'
 import { X, Pencil, ChevronRight, MessageCircle } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
 import CommentArea from './CommentArea'
 import ModalMod from '@/components/admin/ModalMod'
 import { cn } from '@/lib/utils'
+
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
 const TIPO_COLOR: Record<string, string> = {
   regno:   'bg-purple-500/25 text-purple-200 border-purple-400/40',
@@ -38,13 +40,31 @@ function getHierarchy(item: any): any[] {
 }
 
 export default function Details({ open, handleOpen, closeModal, item }: DetailsProps) {
-  const { ruolo } = useUserStore()
+  const { ruolo, token } = useUserStore()
   const [openSubDialog, setOpenSubDialog] = useState(false)
   const [nextItem, setNextItem] = useState<any>(null)
   const [openAdmin, setOpenAdmin] = useState(false)
+  const [commenti, setCommenti] = useState<any[]>([])
 
   const tipo = item?.tipo?.toLowerCase()
   const hierarchy = getHierarchy(item).filter(Boolean)
+
+  // Fetch fresh item data (with commenti) each time the modal opens
+  useEffect(() => {
+    if (!open || !item?.id || !item?.tipo) { setCommenti([]); return }
+    const fetchFull = async () => {
+      try {
+        const r = await fetch(`${API}/${item.tipo.toLowerCase()}/${item.id}`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        })
+        if (r.ok) {
+          const data = await r.json()
+          setCommenti(Array.isArray(data?.commenti) ? data.commenti : [])
+        }
+      } catch { setCommenti([]) }
+    }
+    fetchFull()
+  }, [open, item?.id, item?.tipo, token])
 
   return (
     <>
@@ -213,7 +233,14 @@ export default function Details({ open, handleOpen, closeModal, item }: DetailsP
                     <MessageCircle className="h-3 w-3" />
                     Commenti
                   </h3>
-                  <CommentArea itemId={item?.id} commenti={item?.commenti || []} />
+                  <CommentArea itemId={item?.id} commenti={commenti} onRefresh={async () => {
+                    try {
+                      const r = await fetch(`${API}/${item.tipo.toLowerCase()}/${item.id}`, {
+                        headers: token ? { Authorization: `Bearer ${token}` } : {},
+                      })
+                      if (r.ok) { const d = await r.json(); setCommenti(Array.isArray(d?.commenti) ? d.commenti : []) }
+                    } catch { }
+                  }} />
                 </section>
               </div>
             </div>
