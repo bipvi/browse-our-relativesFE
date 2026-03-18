@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Modal, Alert } from 'flowbite-react'
 import { useUserStore } from '@/store/userStore'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 const TIPI = ['Regno', 'Phylum', 'Classe', 'Ordine', 'Famiglia', 'Genere', 'Specie']
 
 export default function ModalMod({ open, handleOpen, closeModal, itemPassed = null }: {

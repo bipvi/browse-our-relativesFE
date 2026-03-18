@@ -1,13 +1,13 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Flame } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import HomeCards from '@/components/cards/HomeCards'
+import { FaFire } from "react-icons/fa";
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
 export default function MyHero() {
   const router = useRouter()
@@ -62,7 +62,7 @@ export default function MyHero() {
           onClick={() => router.push('/curiosone')}
           className="bg-myP text-myS font-bold hover:bg-myP/80 rounded-2xl px-8 h-12 text-base gap-2 shadow-[0_4px_24px_rgba(0,175,107,0.35)]"
         >
-          <Flame className="h-5 w-5" />
+          <FaFire className="h-5 w-5" />
           Vai al Curiosone
         </Button>
       </section>

@@ -14,10 +14,10 @@ export default function MyNavbar() {
         {/* Logo */}
         <a href="/" className="flex items-center gap-3 shrink-0 group">
           <Image
-            src="/favicon.svg"
+            src="/logo.svg"
             width={36} height={36}
             alt="Logo"
-            className="logo-shadow transition-transform group-hover:scale-110"
+            className="logo-shadow transition-transform group-hover:scale-110 hover:rotate-6"
           />
           <span className="text-lg font-bold text-txt tracking-tight group-hover:text-myP transition-colors hidden xs:block">
             Browse our relatives

@@ -9,7 +9,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import Details from '@/components/detail/Details'
 import { cn } from '@/lib/utils'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
 const CHILDREN_ENDPOINT: Record<string, string> = {
   regno:   'getPhylums',
