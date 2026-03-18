@@ -12,7 +12,10 @@
       "Bash(powershell.exe -Command \"Get-ChildItem ''C:\\\\Users\\\\bip\\\\Desktop\\\\projects\\\\browse-our-relatives\\\\.next\\\\static\\\\css\\\\app\\\\'' -ErrorAction SilentlyContinue | Select-Object Name,Length | Sort-Object Length -Descending | Select-Object -First 5\")",
       "Bash(powershell.exe -Command \"Get-Content ''C:\\\\Users\\\\bip\\\\Desktop\\\\projects\\\\browse-our-relatives\\\\.next\\\\static\\\\css\\\\app\\\\layout.css'' | Select-String -Pattern ''background'' | Select-Object -First 30\")",
       "Bash(powershell.exe -Command \"Get-Content ''C:\\\\Users\\\\bip\\\\Desktop\\\\projects\\\\browse-our-relatives\\\\.next\\\\static\\\\css\\\\app\\\\layout.css'' | Select-String -Pattern ''00484c|E7F1E4|background-color.*important'' | Select-Object -First 20\")",
-      "Bash(powershell.exe -Command \"Get-Content ''C:\\\\Users\\\\bip\\\\Desktop\\\\projects\\\\browse-our-relatives\\\\.next\\\\static\\\\css\\\\app\\\\layout.css'' | Select-String -Pattern ''body\\\\s*\\\\{|body,|:root\\\\s*\\\\{'' | Select-Object -First 20\")"
+      "Bash(powershell.exe -Command \"Get-Content ''C:\\\\Users\\\\bip\\\\Desktop\\\\projects\\\\browse-our-relatives\\\\.next\\\\static\\\\css\\\\app\\\\layout.css'' | Select-String -Pattern ''body\\\\s*\\\\{|body,|:root\\\\s*\\\\{'' | Select-Object -First 20\")",
+      "Bash(find C:UsersbipDesktopprojectsbrowse-our-relativesFEnode_modulestw-animate-css -name *.css)",
+      "Bash(grep -r \"@apply border-border\\\\|@apply font-sans\" C:UsersbipDesktopprojectsbrowse-our-relativesFE --include=*.css)",
+      "Bash(gh pr:*)"
     ]
   }
 }

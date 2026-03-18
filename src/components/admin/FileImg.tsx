@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
 export default function FileImg({ it }: { it: any }) {
   const [file, setFile] = useState<File | null>(null)

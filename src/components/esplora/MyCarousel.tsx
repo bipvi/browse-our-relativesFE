@@ -8,7 +8,7 @@ import { useUserStore } from '@/store/userStore'
 import { HorizontalCard } from '@/components/cards/HorizontalCard'
 import MicroCard from '@/components/cards/MicroCard'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
 export default function MyCarousel({ prevItem, setActive, active }: { prevItem: any; setActive: (item: any) => void; active: any }) {
   const { token } = useUserStore()

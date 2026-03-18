@@ -5,7 +5,7 @@ import { Alert } from 'flowbite-react'
 import { useUserStore } from '@/store/userStore'
 import MyCarousel from './MyCarousel'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
 export default function ExplorePage() {
   const router = useRouter()
