@@ -271,10 +271,4 @@ img.w-10.h-10 {
   .theme {
     --font-sans: var(--font-sans);
   }
-  * {
-    @apply border-border outline-ring/50;
-  }
-  html {
-    @apply font-sans;
-  }
 }
