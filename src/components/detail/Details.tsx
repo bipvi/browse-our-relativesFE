@@ -1,13 +1,22 @@
 'use client'
 import { useState } from 'react'
 import { Dialog } from 'radix-ui'
-import { X, Pencil } from 'lucide-react'
+import { X, Pencil, ChevronRight } from 'lucide-react'
 import { useUserStore } from '@/store/userStore'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import CommentArea from './CommentArea'
 import ModalMod from '@/components/admin/ModalMod'
 import { cn } from '@/lib/utils'
+
+const TIPO_COLOR: Record<string, string> = {
+  regno:   'bg-purple-500/20 text-purple-300 border-purple-500/30',
+  phylum:  'bg-blue-500/20 text-blue-300 border-blue-500/30',
+  classe:  'bg-cyan-500/20 text-cyan-300 border-cyan-500/30',
+  ordine:  'bg-teal-500/20 text-teal-300 border-teal-500/30',
+  famiglia:'bg-myP/20 text-myP border-myP/30',
+  genere:  'bg-yellow-500/20 text-yellow-300 border-yellow-500/30',
+  specie:  'bg-orange-500/20 text-orange-300 border-orange-500/30',
+}
 
 interface DetailsProps {
   open: boolean
@@ -16,24 +25,27 @@ interface DetailsProps {
   item: any
 }
 
+function getHierarchy(item: any): any[] {
+  if (!item) return []
+  switch (item.tipo?.toLowerCase()) {
+    case 'specie':   return [item.genere?.famiglia?.ordine?.classe?.phylum?.regno, item.genere?.famiglia?.ordine?.classe?.phylum, item.genere?.famiglia?.ordine?.classe, item.genere?.famiglia?.ordine, item.genere?.famiglia, item.genere]
+    case 'genere':   return [item.famiglia?.ordine?.classe?.phylum?.regno, item.famiglia?.ordine?.classe?.phylum, item.famiglia?.ordine?.classe, item.famiglia?.ordine, item.famiglia]
+    case 'famiglia': return [item.ordine?.classe?.phylum?.regno, item.ordine?.classe?.phylum, item.ordine?.classe, item.ordine]
+    case 'ordine':   return [item.classe?.phylum?.regno, item.classe?.phylum, item.classe]
+    case 'classe':   return [item.phylum?.regno, item.phylum]
+    case 'phylum':   return [item.regno]
+    default:         return []
+  }
+}
+
 export default function Details({ open, handleOpen, closeModal, item }: DetailsProps) {
   const { ruolo } = useUserStore()
   const [openSubDialog, setOpenSubDialog] = useState(false)
   const [nextItem, setNextItem] = useState<any>(null)
   const [openAdmin, setOpenAdmin] = useState(false)
 
-  const getHierarchy = () => {
-    if (!item) return []
-    switch (item.tipo?.toLowerCase()) {
-      case 'specie':   return [item.genere, item.genere?.famiglia, item.genere?.famiglia?.ordine, item.genere?.famiglia?.ordine?.classe, item.genere?.famiglia?.ordine?.classe?.phylum, item.genere?.famiglia?.ordine?.classe?.phylum?.regno]
-      case 'genere':   return [item.famiglia, item.famiglia?.ordine, item.famiglia?.ordine?.classe, item.famiglia?.ordine?.classe?.phylum, item.famiglia?.ordine?.classe?.phylum?.regno]
-      case 'famiglia': return [item.ordine, item.ordine?.classe, item.ordine?.classe?.phylum, item.ordine?.classe?.phylum?.regno]
-      case 'ordine':   return [item.classe, item.classe?.phylum, item.classe?.phylum?.regno]
-      case 'classe':   return [item.phylum, item.phylum?.regno]
-      case 'phylum':   return [item.regno]
-      default:         return []
-    }
-  }
+  const tipo = item?.tipo?.toLowerCase()
+  const hierarchy = getHierarchy(item).filter(Boolean)
 
   return (
     <>
@@ -48,111 +60,137 @@ export default function Details({ open, handleOpen, closeModal, item }: DetailsP
 
       <Dialog.Root open={open} onOpenChange={(v) => { if (!v) handleOpen() }}>
         <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+          <Dialog.Overlay className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
           <Dialog.Content
             className={cn(
-              "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2",
-              "max-h-[92vh] w-[95vw] max-w-5xl flex flex-col",
-              "bg-bg border border-myP/20 rounded-2xl shadow-2xl",
-              "data-[state=open]:animate-in data-[state=closed]:animate-out",
-              "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
-              "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
-              "data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%]",
-              "data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]"
+              'fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2',
+              'w-[95vw] max-w-4xl max-h-[90vh] flex flex-col overflow-hidden',
+              'bg-[#002b2e] border border-white/8 rounded-3xl shadow-[0_24px_80px_rgba(0,0,0,0.6)]',
+              'data-[state=open]:animate-in data-[state=closed]:animate-out',
+              'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+              'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
             )}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-myP/10 flex-shrink-0">
-              <Dialog.Title className="text-lg font-semibold text-txt">Browse our relatives</Dialog.Title>
-              <Dialog.Close className="p-2 rounded-lg text-txt/50 hover:text-txt hover:bg-myP/10 transition-colors">
+            {/* ── Hero image ── */}
+            <div className="relative h-52 sm:h-64 shrink-0">
+              <img
+                src={item?.img || ''}
+                alt={item?.nome || ''}
+                className="w-full h-full object-cover"
+              />
+              {/* gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#002b2e] via-[#002b2e]/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#002b2e]/30 to-transparent" />
+
+              {/* Close button */}
+              <Dialog.Close className="absolute top-4 right-4 p-2 rounded-full bg-black/40 backdrop-blur-sm text-white/70 hover:text-white hover:bg-black/60 transition-all">
                 <X className="h-5 w-5" />
               </Dialog.Close>
+
+              {/* Tipo badge + name overlaid on image */}
+              <div className="absolute bottom-4 left-6 right-6">
+                {item?.tipo && (
+                  <span className={cn(
+                    'inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full border backdrop-blur-sm mb-2',
+                    TIPO_COLOR[tipo] ?? 'bg-white/10 text-white border-white/20'
+                  )}>
+                    {item.tipo}
+                  </span>
+                )}
+                <Dialog.Title className="text-2xl sm:text-3xl font-bold text-white leading-tight drop-shadow-lg">
+                  {item?.nome}
+                </Dialog.Title>
+              </div>
             </div>
 
-            {/* Body */}
+            {/* ── Body ── */}
             <div className="overflow-y-auto flex-1 p-6">
-              <div className="flex flex-col-reverse md:flex-row gap-6">
-                {/* Left: image + hierarchy */}
-                <div className="flex-shrink-0 w-full md:w-72">
-                  <img
-                    src={item?.img}
-                    alt={item?.nome || 'Elemento'}
-                    className="w-full rounded-xl object-cover shadow-lg"
-                  />
-                  {getHierarchy().filter(Boolean).length > 0 && (
-                    <div className="mt-4 space-y-1">
-                      {getHierarchy().filter(Boolean).map((level: any, i: number) => (
-                        <button
-                          key={i}
-                          onClick={() => { setNextItem(level); setOpenSubDialog(true) }}
-                          className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-myP/10 transition-colors text-left group"
-                        >
-                          <img
-                            src={level?.img || ''}
-                            alt={level?.nome || ''}
-                            className="w-9 h-9 rounded-full object-cover ring-1 ring-myP/30 flex-shrink-0"
-                          />
-                          <div className="min-w-0">
-                            <span className="block text-sm font-semibold text-txt truncate group-hover:text-myP transition-colors">
-                              {level?.nome || 'Sconosciuto'}
-                            </span>
-                            <span className="text-xs text-txt/50">{level?.tipo || 'N/A'}</span>
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
+              <div className="flex flex-col md:flex-row gap-6">
 
-                {/* Right: content */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start gap-3 mb-6">
-                    <div>
-                      <Badge variant="outline" className="mb-2">{item?.tipo}</Badge>
-                      <h1 className="text-3xl font-bold text-txt">{item?.nome}</h1>
+                {/* Left: hierarchy */}
+                {hierarchy.length > 0 && (
+                  <div className="md:w-56 shrink-0">
+                    <p className="text-xs font-semibold text-txt/40 uppercase tracking-widest mb-3">Classificazione</p>
+                    <div className="space-y-1">
+                      {hierarchy.map((level: any, i: number) => {
+                        const lvlTipo = level?.tipo?.toLowerCase()
+                        return (
+                          <button
+                            key={i}
+                            onClick={() => { setNextItem(level); setOpenSubDialog(true) }}
+                            className="w-full flex items-center gap-2.5 p-2 rounded-xl hover:bg-white/5 transition-colors text-left group"
+                          >
+                            <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 ring-1 ring-white/10">
+                              <img
+                                src={level?.img || ''}
+                                alt={level?.nome || ''}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <span className="block text-xs font-semibold text-txt truncate group-hover:text-myP transition-colors">
+                                {level?.nome}
+                              </span>
+                              <span className={cn(
+                                'text-[10px] px-1.5 py-px rounded-full border',
+                                TIPO_COLOR[lvlTipo] ?? 'text-txt/40 border-white/10'
+                              )}>
+                                {level?.tipo}
+                              </span>
+                            </div>
+                            <ChevronRight className="h-3.5 w-3.5 text-txt/20 group-hover:text-myP/50 shrink-0 transition-colors" />
+                          </button>
+                        )
+                      })}
                     </div>
                   </div>
+                )}
 
-                  <section className="mb-6">
-                    <h2 className="text-base font-semibold text-myP mb-2 flex items-center gap-2">
-                      <span className="w-1 h-4 bg-myP rounded-full inline-block" />
-                      Descrizione
+                {/* Right: content */}
+                <div className="flex-1 min-w-0 space-y-6">
+                  {item?.descrizione && (
+                    <section>
+                      <h2 className="text-xs font-semibold text-txt/40 uppercase tracking-widest mb-2 flex items-center gap-2">
+                        <span className="w-4 h-px bg-myP rounded-full" />
+                        Descrizione
+                      </h2>
+                      <p className="text-sm text-txt/75 leading-relaxed">{item.descrizione}</p>
+                    </section>
+                  )}
+
+                  {item?.storia && (
+                    <section>
+                      <h2 className="text-xs font-semibold text-txt/40 uppercase tracking-widest mb-2 flex items-center gap-2">
+                        <span className="w-4 h-px bg-myP rounded-full" />
+                        Storia
+                      </h2>
+                      <p className="text-sm text-txt/75 leading-relaxed">{item.storia}</p>
+                    </section>
+                  )}
+
+                  <section>
+                    <h2 className="text-xs font-semibold text-txt/40 uppercase tracking-widest mb-3 flex items-center gap-2">
+                      <span className="w-4 h-px bg-myP rounded-full" />
+                      Commenti
                     </h2>
-                    <p className="text-txt/80 leading-relaxed text-sm">{item?.descrizione}</p>
+                    <CommentArea itemId={item?.id} commenti={item?.commenti || []} />
                   </section>
-
-                  <section className="mb-6">
-                    <h2 className="text-base font-semibold text-myP mb-2 flex items-center gap-2">
-                      <span className="w-1 h-4 bg-myP rounded-full inline-block" />
-                      Storia
-                    </h2>
-                    <p className="text-txt/80 leading-relaxed text-sm">{item?.storia}</p>
-                  </section>
-
-                  <CommentArea itemId={item?.id} commenti={item?.commenti || []} />
                 </div>
               </div>
             </div>
 
-            {/* Footer */}
-            <div className="flex justify-end gap-3 px-6 py-4 border-t border-myP/10 flex-shrink-0">
-              <Button
-                onClick={handleOpen}
-                variant="outline"
-                className="border-myP/30 text-txt hover:bg-myP/10 rounded-xl"
-              >
-                Annulla
-              </Button>
-              {ruolo !== 'USER' && (
+            {/* ── Footer ── */}
+            {ruolo !== 'USER' && (
+              <div className="shrink-0 px-6 py-4 border-t border-white/5 flex justify-end">
                 <Button
                   onClick={() => { setOpenAdmin(true); closeModal() }}
-                  className="bg-myP text-myS font-semibold hover:bg-myP/80 rounded-xl gap-2"
+                  className="bg-myP text-myS font-semibold hover:bg-myP/80 rounded-xl gap-2 h-9 text-sm"
                 >
-                  <Pencil className="h-4 w-4" />
+                  <Pencil className="h-3.5 w-3.5" />
                   Modifica
                 </Button>
-              )}
-            </div>
+              </div>
+            )}
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
