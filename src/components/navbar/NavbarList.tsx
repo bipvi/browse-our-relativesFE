@@ -8,7 +8,6 @@ import { cn } from '@/lib/utils'
 
 const links = [
   { label: 'Home', href: '/' },
-  { label: 'Curiosone', href: '/curiosone', icon: <Flame className="h-3.5 w-3.5 text-myP" /> },
   { label: 'Curiosone', href: '/curiosone', icon: <FaFire className="h-3.5 w-3.5 text-myP" /> },
   { label: 'Preferiti', href: '/preferiti', icon: <Heart className="h-3.5 w-3.5" /> },
 ]
